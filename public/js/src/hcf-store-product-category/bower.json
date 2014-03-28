@@ -1,0 +1,25 @@
+{
+  "name": "hcb-store-product-category",
+  "version": "0.0.0",
+  "authors": [
+    "Milotskiy Alexey <spalaxinco@gmail.com>"
+  ]
+  ,
+  "license": "MIT",
+  
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+
+  "dependencies": {
+      "dojo-common": "https://github.com/Spalax/dojo-common.git",
+      "dojo": ">=1.9.2",
+      "dijit": ">=1.9.2",
+      "dgrid": ">=0.3.12",
+      "xstyle": ">=0.2.1"
+  }
+}

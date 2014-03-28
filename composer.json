@@ -1,0 +1,47 @@
+{
+    "name": "huskycms/hcf-store-product-category",
+    "type": "huskycms-frontend-plugin",
+    "description": "Displaying product categories and products from categories",
+    "authors": [
+        {
+            "name": "Mylotskyi Oleksii",
+            "email": "spalaxinco@gmail.com"
+        }
+    ],
+    "keywords": [
+        "huskycms", "plugin", "module"
+    ],
+    "license": "MIT",
+    "homepage": "http://huskycms.com/hcf-store-product-category",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://packages.milsdev.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/PHPUnit": "3.7.*"
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "huskycms/hc-core": "dev-master",
+        "huskycms/hc-frontend": "dev-master",
+        "huskycms/hcb-store-product": "dev-master",
+        "spalax/zf2-libs": "dev-master",
+        "zendframework/zendframework": "2.3.0",
+        "doctrine/doctrine-module": "0.*",
+        "doctrine/doctrine-orm-module": "0.*",
+        "doctrine/migrations": "v1.0-ALPHA1",
+        "rwoverdijk/assetmanager": "1.3.5"
+    },
+    "autoload": {
+        "psr-0": {
+            "HcfStoreProductCategory": "src/"
+        },
+
+        "classmap": [
+            "./Module.php"
+        ]
+    },
+    "minimum-stability": "dev"
+}
