@@ -27,6 +27,7 @@
         "huskycms/hc-core": "dev-master",
         "huskycms/hc-frontend": "dev-master",
         "huskycms/hcb-store-product": "dev-master",
+        "huskycms/hcb-store-product-category": "dev-master",
         "spalax/zf2-libs": "dev-master",
         "zendframework/zendframework": "2.3.0",
         "doctrine/doctrine-module": "0.*",
