@@ -1,5 +1,5 @@
 <?php
-namespace HcfStoreProductCategory\Service;
+namespace HcfStoreProductCategory\Mvc\Router;
 
 use HcbStoreProductCategory\Entity\Category\Localized as LocalizedEntity;
 use HcfStoreProductCategory\Service\Collection\FetchQbBuilderService;
@@ -32,6 +32,7 @@ class RouterFactory extends DefaultRouterFactory
 
         /* @var $cacheStorage \Zend\Cache\Storage\StorageInterface */
         $cacheStorage = $serviceLocator->get('HcCore-CacheStorage');
+
         /* @var $currentLocale \HcCore\Entity\Locale */
         $currentLocale = $di->get('HcCore\Entity\Locale');
 
@@ -85,6 +86,10 @@ class RouterFactory extends DefaultRouterFactory
         return $routes;
     }
 
+    /**
+     * @param LocalizedEntity $localizedEntity
+     * @return array
+     */
     protected function getProductRoutes(LocalizedEntity $localizedEntity)
     {
         $localeEntity = $localizedEntity->getLocale();
