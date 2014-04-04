@@ -3,11 +3,11 @@ namespace HcfStoreProductCategory\Mvc\Router;
 
 use HcbStoreProductCategory\Entity\Category\Localized as LocalizedEntity;
 use HcfStoreProductCategory\Service\Collection\FetchQbBuilderService;
-use Zend\Mvc\Router\RouteStackInterface;
 use Zend\Mvc\Service\RouterFactory as DefaultRouterFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use HcCore\Entity\Locale as LocaleEntity;
 use Zend\Stdlib\Parameters;
+use Zend\Console\Console;
 
 class RouterFactory extends DefaultRouterFactory
 {
@@ -27,6 +27,12 @@ class RouterFactory extends DefaultRouterFactory
     {
         $router = parent::createService($serviceLocator, $cName, $rName);
 
+        // Console environment?
+        if ($rName === 'ConsoleRouter'                       // force console router
+            || ($cName === 'router' && Console::isConsole()) // auto detect console
+        ) {
+            return $router;
+        }
         $this->di = $di = $serviceLocator->get('di');
         $this->em = $serviceLocator->get('Doctrine\ORM\EntityManager');
 
@@ -69,7 +75,7 @@ class RouterFactory extends DefaultRouterFactory
         /* @var $localizedEntity LocalizedEntity */
         foreach ($categoryQb->getQuery()->getResult() as $localizedEntity) {
             $routeId = 'category_'.$localizedEntity->getId();
-            $literal = array( 'type' => 'Literal',
+            $literal = array( 'type' => 'literal',
                               'options' => array(
                                 'route' => $localizedEntity->getPage()->getUrl(),
                                 'defaults' => array(
@@ -102,7 +108,7 @@ class RouterFactory extends DefaultRouterFactory
         foreach ($products->fetch($localizedEntity)->getQuery()->getResult() as $localizedProduct) {
             if ($localizedProduct->getLocale()->getId() == $localeEntity->getId()) {
                 $routes['product_'.$localizedProduct->getId()] = array(
-                    'type' => 'Literal',
+                    'type' => 'literal',
                     'options' => array(
                         'route' => $localizedProduct->getPage()->getUrl(),
                         'defaults' => array(
