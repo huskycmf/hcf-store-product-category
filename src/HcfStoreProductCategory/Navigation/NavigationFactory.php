@@ -3,8 +3,8 @@ namespace HcfStoreProductCategory\Navigation;
 
 use HcbStoreProductCategory\Entity\Category\Localized as LocalizedEntity;
 use HcCore\Entity\Locale as LocaleEntity;
-use HcfStoreProductCategory\Service\Collection\FetchQbBuilderService;
-use HcfStoreProductCategory\Service\Fetch\Product\FetchByLocalizedCategoryService;
+use HcfStoreProductCategory\Service\Collection\FetchQbBuilderService as FetchCategoryCollectionService;
+use HcfStoreProductCategory\Service\Product\Collection\FetchQbBuilderService as FetchCategoryProductCollectionService;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Navigation\Service\AbstractNavigationFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -16,9 +16,9 @@ use Zend\Stdlib\Parameters;
 class NavigationFactory extends AbstractNavigationFactory
 {
     /**
-     * @var FetchQbBuilderService
+     * @var FetchCategoryCollectionService
      */
-    protected $fetchCategoryCollection;
+    protected $fetchCategoryCollectionService;
 
     /**
      * @var LocaleEntity
@@ -31,24 +31,24 @@ class NavigationFactory extends AbstractNavigationFactory
     protected $cacheStorage;
 
     /**
-     * @var FetchByLocalizedCategoryService
+     * @var FetchCategoryProductCollectionService
      */
-    protected $fetchByLocalizedCategoryService;
+    protected $fetchCategoryProductCollectionService;
 
     /**
-     * @param FetchQbBuilderService $fetchCategoryCollection
+     * @param FetchCategoryCollectionService $fetchCategoryCollection
      * @param LocaleEntity $currentLocaleEntity
-     * @param FetchByLocalizedCategoryService $fetchByLocalizedCategoryService
+     * @param FetchCategoryProductCollectionService $fetchCategoryProductCollectionService
      * @param StorageInterface $storage
      */
-    public function __construct(FetchQbBuilderService $fetchCategoryCollection,
+    public function __construct(FetchCategoryCollectionService $fetchCategoryCollection,
                                 LocaleEntity $currentLocaleEntity,
-                                FetchByLocalizedCategoryService $fetchByLocalizedCategoryService,
+                                FetchCategoryProductCollectionService $fetchCategoryProductCollectionService,
                                 StorageInterface $storage)
     {
-        $this->fetchCategoryCollection = $fetchCategoryCollection;
+        $this->fetchCategoryCollectionService = $fetchCategoryCollection;
         $this->currentLocaleEntity = $currentLocaleEntity;
-        $this->fetchByLocalizedCategoryService = $fetchByLocalizedCategoryService;
+        $this->fetchCategoryProductCollectionService = $fetchCategoryProductCollectionService;
         $this->cacheStorage = $storage;
     }
 
@@ -75,7 +75,7 @@ class NavigationFactory extends AbstractNavigationFactory
             return $this->cacheStorage->getItem($cacheId);
         }
 
-        $categoryQb = $this->fetchCategoryCollection
+        $categoryQb = $this->fetchCategoryCollectionService
                             ->fetch(new Parameters(array('locale' => $this->currentLocaleEntity->getLocale())));
 
         $pages = array();
@@ -103,8 +103,10 @@ class NavigationFactory extends AbstractNavigationFactory
         $localeEntity = $localizedEntity->getLocale();
         $pages = array();
 
+        $qb = $this->fetchCategoryProductCollectionService->fetch($localizedEntity);
+
         /* @var $localizedProduct \HcbStoreProduct\Entity\Product\Localized */
-        foreach ($this->fetchByLocalizedCategoryService->fetch($localizedEntity) as $localizedProduct) {
+        foreach ($qb->getQuery()->getResult() as $localizedProduct) {
             if ($localizedProduct->getLocale()->getId() == $localeEntity->getId()) {
                 $pageId = 'product_'.$localizedProduct->getId();
                 $pages[$pageId] = array( 'label'=>$localizedProduct->getTitle(),

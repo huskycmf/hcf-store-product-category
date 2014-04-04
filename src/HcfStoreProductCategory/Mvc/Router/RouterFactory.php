@@ -69,7 +69,7 @@ class RouterFactory extends DefaultRouterFactory
         /* @var $localizedEntity LocalizedEntity */
         foreach ($categoryQb->getQuery()->getResult() as $localizedEntity) {
             $routeId = 'category_'.$localizedEntity->getId();
-            $literal = array( 'type' => 'literal',
+            $literal = array( 'type' => 'Literal',
                               'options' => array(
                                 'route' => $localizedEntity->getPage()->getUrl(),
                                 'defaults' => array(
@@ -95,14 +95,14 @@ class RouterFactory extends DefaultRouterFactory
         $localeEntity = $localizedEntity->getLocale();
         $routes = array();
 
-        $products = $this->di->get('HcfStoreProductCategory\Service\Fetch\Product\FetchByLocalizedCategoryService',
+        $products = $this->di->get('HcfStoreProductCategory\Service\Product\Collection\FetchQbBuilderService',
                                      array('entityManager'=>$this->em));
 
         /* @var $localizedProduct \HcbStoreProduct\Entity\Product\Localized */
-        foreach ($products->fetch($localizedEntity) as $localizedProduct) {
+        foreach ($products->fetch($localizedEntity)->getQuery()->getResult() as $localizedProduct) {
             if ($localizedProduct->getLocale()->getId() == $localeEntity->getId()) {
                 $routes['product_'.$localizedProduct->getId()] = array(
-                    'type' => 'literal',
+                    'type' => 'Literal',
                     'options' => array(
                         'route' => $localizedProduct->getPage()->getUrl(),
                         'defaults' => array(
