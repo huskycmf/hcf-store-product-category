@@ -117,7 +117,6 @@ class RouterFactory extends DefaultRouterFactory
                         )
                     )
                 );
-                break;
             }
         }
         return $routes;
