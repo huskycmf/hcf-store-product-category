@@ -111,7 +111,6 @@ class NavigationFactory extends AbstractNavigationFactory
                 $pageId = 'product_'.$localizedProduct->getId();
                 $pages[$pageId] = array( 'label'=>$localizedProduct->getTitle(),
                                          'route'=>$categoryRoute.'/'.$pageId);
-                break;
             }
         }
         return $pages;

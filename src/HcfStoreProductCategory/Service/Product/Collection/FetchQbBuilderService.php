@@ -71,7 +71,9 @@ class FetchQbBuilderService implements ResourceDataServiceInterface
                                            ->join('c.localized', 'cl')
                                            ->where('p.enabled = 1')
                                            ->andWhere('cl.id = :localized')->getDQL().')')
-            ->setParameter('localized', $localizedCategoryId);
+            ->andWhere('pl.locale = :locale')
+            ->setParameter('localized', $localizedCategoryId)
+            ->setParameter('locale', $localizedCategoryResource->getLocale());
 
 
         if (is_null($params)) return $qb;
