@@ -86,6 +86,7 @@ class NavigationFactory extends AbstractNavigationFactory
 
             $pages[$pageId] = array('label'=>$localizedEntity->getTitle(),
                                     'route'=>$pageId,
+                                    'class'=>$pageId,
                                     'pages'=>$this->getProductPages($pageId, $localizedEntity));
         }
 
@@ -110,6 +111,7 @@ class NavigationFactory extends AbstractNavigationFactory
             if ($localizedProduct->getLocale()->getId() == $localeEntity->getId()) {
                 $pageId = 'product_'.$localizedProduct->getId();
                 $pages[$pageId] = array( 'label'=>$localizedProduct->getTitle(),
+                                         'class'=>$pageId,
                                          'route'=>$categoryRoute.'/'.$pageId);
             }
         }
