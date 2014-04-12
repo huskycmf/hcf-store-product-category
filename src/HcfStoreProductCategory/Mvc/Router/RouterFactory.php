@@ -75,9 +75,10 @@ class RouterFactory extends DefaultRouterFactory
         /* @var $localizedEntity LocalizedEntity */
         foreach ($categoryQb->getQuery()->getResult() as $localizedEntity) {
             $routeId = 'category_'.$localizedEntity->getId();
+            $page = $localizedEntity->getPage();
             $literal = array( 'type' => 'literal',
                               'options' => array(
-                                'route' => $localizedEntity->getPage()->getUrl(),
+                                'route' => is_null($page) ? $localizedEntity->getId() : $page->getUrl(),
                                 'defaults' => array(
                                     'controller' => 'HcfStoreProductCategory-Controller-Category',
                                     'id' => $localizedEntity->getId()
@@ -107,10 +108,11 @@ class RouterFactory extends DefaultRouterFactory
         /* @var $localizedProduct \HcbStoreProduct\Entity\Product\Localized */
         foreach ($products->fetch($localizedEntity)->getQuery()->getResult() as $localizedProduct) {
             if ($localizedProduct->getLocale()->getId() == $localeEntity->getId()) {
+                $page = $localizedProduct->getPage();
                 $routes['product_'.$localizedProduct->getId()] = array(
                     'type' => 'literal',
                     'options' => array(
-                        'route' => $localizedProduct->getPage()->getUrl(),
+                        'route' => is_null($page) ? $localizedProduct->getId() : $page->getUrl(),
                         'defaults' => array(
                             'controller' => 'HcfStoreProductCategory-Controller-Category-Product',
                             'id' => $localizedProduct->getId()
