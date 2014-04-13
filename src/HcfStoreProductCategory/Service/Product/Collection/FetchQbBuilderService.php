@@ -63,13 +63,14 @@ class FetchQbBuilderService implements ResourceDataServiceInterface
                    ->createQueryBuilder('pl');
 
         $qb->select(array('pl'))
+            ->join('pl.product', 'product')
             ->where('pl.product IN ('.$this->entityManager
                                            ->getRepository('HcbStoreProductCategory\Entity\Category')
                                            ->createQueryBuilder('c')
-                                           ->select(array('p.id'))
-                                           ->join('c.product', 'p')
+                                           ->select(array('pr.id'))
+                                           ->join('c.product', 'pr')
                                            ->join('c.localized', 'cl')
-                                           ->where('p.enabled = 1')
+                                           ->where('pr.enabled = 1')
                                            ->andWhere('cl.id = :localized')->getDQL().')')
             ->andWhere('pl.locale = :locale')
             ->setParameter('localized', $localizedCategoryId)
@@ -79,8 +80,7 @@ class FetchQbBuilderService implements ResourceDataServiceInterface
         if (is_null($params)) return $qb;
 
         return $this->filtrationService->apply($params,
-                                               $this->sortingService->apply($params, $qb, 'pl'),
-                                               'l',
-                                               array('locale'=>'loc.locale'));
+                                               $this->sortingService->apply($params, $qb, 'product'),
+                                               'pl');
     }
 }
