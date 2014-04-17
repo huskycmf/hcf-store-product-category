@@ -2,11 +2,11 @@
 namespace HcfStoreProductCategory\Service;
 
 use HcbStoreProduct\Entity\Product as ProductEntity;
-use HcbStoreProductCategory\Entity\Category\Localized as LocalizedCategoryEntity;
+use HcbStoreProductCategory\Entity\Category as CategoryEntity;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 
-class FetchLocalizedCategoryByProductService
+class FetchCategoryByProductService
 {
     /**
      * @var EntityManagerInterface
@@ -23,18 +23,16 @@ class FetchLocalizedCategoryByProductService
 
     /**
      * @param ProductEntity $productEntity
-     * @return LocalizedCategoryEntity | null
+     * @return CategoryEntity | null
      */
     public function fetch(ProductEntity $productEntity)
     {
         /* @var $qb QueryBuilder */
         $qb = $this->entityManager
-                   ->getRepository('HcbStoreProductCategory\Entity\Category\Localized')
-                   ->createQueryBuilder('l');
+                   ->getRepository('HcbStoreProductCategory\Entity\Category')
+                   ->createQueryBuilder('c');
 
-        $qb = $qb->select(array('l'))
-           ->join('l.category', 'c')
-           ->join('l.locale', 'loc')
+        $qb = $qb->select(array('c'))
            ->join('c.product', 'p')
            ->where('c.enabled = 1')
            ->andWhere('p = :product');

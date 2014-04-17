@@ -47,40 +47,35 @@ class FetchQbBuilderService implements ResourceDataServiceInterface
      * @return QueryBuilder
      * @throws \HcfStoreProductCategory\Exception\InvalidArgumentException
      */
-    public function fetch($localizedCategoryResource, Parameters $params = null)
+    public function fetch($categoryResource, Parameters $params = null)
     {
-        $localizedCategoryId = $localizedCategoryResource;
+        $localizedCategoryId = $categoryResource;
 
-        if ($localizedCategoryResource instanceof \HcbStoreProductCategory\Entity\Category\Localized) {
-            $localizedCategoryId = $localizedCategoryResource->getId();
-        } else if (!is_numeric($localizedCategoryResource)) {
+        if ($categoryResource instanceof \HcbStoreProductCategory\Entity\Category) {
+            $localizedCategoryId = $categoryResource->getId();
+        } else if (!is_numeric($categoryResource)) {
             throw new InvalidArgumentException("Invalid resource type for localizedCategoryResource");
         }
 
         /* @var $qb QueryBuilder */
         $qb = $this->entityManager
-                   ->getRepository('HcbStoreProduct\Entity\Product\Localized')
-                   ->createQueryBuilder('pl');
+                   ->getRepository('HcbStoreProduct\Entity\Product')
+                   ->createQueryBuilder('p');
 
-        $qb->select(array('pl'))
-            ->join('pl.product', 'product')
-            ->where('pl.product IN ('.$this->entityManager
-                                           ->getRepository('HcbStoreProductCategory\Entity\Category')
-                                           ->createQueryBuilder('c')
-                                           ->select(array('pr.id'))
-                                           ->join('c.product', 'pr')
-                                           ->join('c.localized', 'cl')
-                                           ->where('pr.enabled = 1')
-                                           ->andWhere('cl.id = :localized')->getDQL().')')
-            ->andWhere('pl.locale = :locale')
-            ->setParameter('localized', $localizedCategoryId)
-            ->setParameter('locale', $localizedCategoryResource->getLocale());
-
+        $qb->select(array('p'))
+            ->where('p IN ('.$this->entityManager
+                    ->getRepository('HcbStoreProductCategory\Entity\Category')
+                    ->createQueryBuilder('c')
+                    ->select(array('cp.id'))
+                    ->join('c.product', 'cp')
+                    ->where('cp.enabled = 1')
+                    ->andWhere('c = :category')->getDQL().')')
+            ->setParameter('category', $localizedCategoryId);
 
         if (is_null($params)) return $qb;
 
         return $this->filtrationService->apply($params,
-                                               $this->sortingService->apply($params, $qb, 'product'),
-                                               'pl');
+                                               $this->sortingService->apply($params, $qb, 'p'),
+                                               'p');
     }
 }

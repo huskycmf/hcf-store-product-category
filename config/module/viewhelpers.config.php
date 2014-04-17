@@ -2,14 +2,17 @@
 return array(
     'invokables' => array(
         'categoryProductUrl' => 'HcfStoreProductCategory\View\Helper\CategoryProductUrl',
-        'categoryRoute' => 'HcfStoreProductCategory\View\Helper\CategoryRoute'
+        'categoryUrl' => 'HcfStoreProductCategory\View\Helper\CategoryUrl'
     ),
 
     'factories' => array(
-//
-//        'example' => function (Zend\View\HelperPluginManager $sm) {
-//            $di = $sm->getServiceLocator()->get('di');
-//            return $di->get('Frontend\View\Helper\Message\GetNewMessages');
-//        }
+        'categoryGetRouteParams' => function (Zend\View\HelperPluginManager $sm) {
+                $di = $sm->getServiceLocator()->get('di');
+                return $di->get('HcfStoreProductCategory\View\Helper\GetRouteParams');
+        },
+        'categoryGetProductRouteParams' => function (Zend\View\HelperPluginManager $sm) {
+                $di = $sm->getServiceLocator()->get('di');
+                return $di->get('HcfStoreProductCategory\View\Helper\GetProductRouteParams');
+        }
     )
 );
