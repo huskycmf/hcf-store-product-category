@@ -75,7 +75,7 @@ class FetchQbBuilderService implements ResourceDataServiceInterface
         if (is_null($params)) return $qb;
 
         return $this->filtrationService->apply($params,
-                                               $this->sortingService->apply($params, $qb, 'p'),
+                                               $this->sortingService->apply($params, $qb, 'p', array('price'=>'p.price')),
                                                'p');
     }
 }
