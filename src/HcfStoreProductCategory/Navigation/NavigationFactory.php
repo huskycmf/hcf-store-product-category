@@ -115,16 +115,18 @@ class NavigationFactory extends AbstractNavigationFactory
 
         /* @var $product \HcbStoreProduct\Entity\Product */
         foreach ($qb->getQuery()->getResult() as $product) {
+
             $alias = $this->detectAliasService->detect($product);
             /* @var $localizedProduct \HcbStoreProduct\Entity\Product\Localized */
             foreach ($product->getLocalized() as $localizedProduct) {
+
                 if ($localizedProduct->getLocale()->getId() == $localeEntity->getId()) {
                     $pages['product_'.$localizedProduct->getId()] =
                         array( 'label'=>$localizedProduct->getTitle(),
                                'route'=>'hc-frontend/category/product',
                                'params' => array(
                                   'product' => (is_null($alias) ?
-                                               $localizedProduct->getId() :
+                                               $product->getId() :
                                                $alias->getAlias()->getName())
                              ));
                 }
