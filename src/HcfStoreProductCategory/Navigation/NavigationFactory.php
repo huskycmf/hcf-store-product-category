@@ -90,15 +90,14 @@ class NavigationFactory extends AbstractNavigationFactory
 
             $pageId = 'category_'.$categoryEntity->getId();
             $alias = $this->detectAliasService->detect($categoryEntity);
+            $categoryAlias = (is_null($alias) ? $categoryEntity->getId() : $alias->getAlias()->getName());
 
             $pages[$pageId] = array('label'=>$localizedEntity->getTitle(),
                                     'route'=>'hc-frontend/category',
                                     'class'=>$pageId,
-                                    'pages'=>$this->getProductPages($localizedEntity),
+                                    'pages'=>$this->getProductPages($localizedEntity, $categoryAlias),
                                     'params' => array(
-                                        'category' => (is_null($alias) ?
-                                                      $categoryEntity->getId() :
-                                                      $alias->getAlias()->getName())));
+                                        'category' => $categoryAlias));
         }
 
         $this->cacheStorage->setItem($cacheId, $pages);
@@ -106,7 +105,7 @@ class NavigationFactory extends AbstractNavigationFactory
     }
 
 
-    protected function getProductPages(CategoryLocalizedEntity $localizedEntity)
+    protected function getProductPages(CategoryLocalizedEntity $localizedEntity, $categoryAlias)
     {
         $localeEntity = $localizedEntity->getLocale();
         $pages = array();
@@ -127,7 +126,8 @@ class NavigationFactory extends AbstractNavigationFactory
                                'params' => array(
                                   'product' => (is_null($alias) ?
                                                $product->getId() :
-                                               $alias->getAlias()->getName())
+                                               $alias->getAlias()->getName()),
+                                  'category' => $categoryAlias
                              ));
                 }
             }
